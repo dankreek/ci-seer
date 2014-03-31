@@ -9,7 +9,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [puppetlabs/trapperkeeper ~tk-version]]
+                 [puppetlabs/trapperkeeper ~tk-version]
+                 [cheshire "5.3.1"]
+                 [prismatic/schema "0.2.1"]
+                 [clj-http "0.9.1"]]
 
   :main ^:skip-aot dankreek.ci-seer
 
