@@ -20,8 +20,9 @@
 
   :profiles  {:uberjar {:aot :all}
 
-              :dev {:test-paths    ["test-resources"]
-                    :dependencies  [[org.clojure/tools.namespace "0.2.4"]
-                                    [puppetlabs/trapperkeeper ~tk-version :classifier "test" :scope "test"]
+              :dev {:dependencies  [[org.clojure/tools.namespace "0.2.4"]
+                                    [puppetlabs/trapperkeeper ~tk-version
+                                     :classifier "test"
+                                     :scope "test"]
                                     [spyscope "0.1.4"]]
                     :injections    [(require 'spyscope.core)]}})
