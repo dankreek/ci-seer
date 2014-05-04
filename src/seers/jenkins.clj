@@ -4,14 +4,13 @@
             [schema.core :as schema]
             [clj-http.client :as client]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;o;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Schemas
 
 (def JenkinsJob
   {:name schema/Str
    :displayName schema/Str
    :color schema/Str
-   ;; Don't care about the rest of the keys
    schema/Keyword schema/Any})
 
 (def JenkinsView
@@ -31,15 +30,16 @@
   {:post [(string? %)]}
   (:body (client/get (str url "/view/" view "/api/json?depth=1"))))
 
-(schema/defn parse-view-payload :- JenkinsView
+(schema/defn ^:always-validate
+  parse-view-payload :- JenkinsView
   "Parse the data returned from fetch-view-payload into
   a data structure."
   [json-string :- schema/Str]
   (cheshire/parse-string json-string true))
 
-(defn job-status
+(schema/defn ^:always-validate
+  job-status :- protocol/JobStatus
   [view-data]
-  {:post [(protocol/status? %)]}
   :passing)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,14 +47,19 @@
 
 (def seer
   (reify protocol/CiSeer
-    (supports? [this ci-system]
+    (supports?
+      [this ci-system]
       (= ci-system :jenkins))
 
-    (get-jobs-in-folder [this server folder]
-      {:pre [(protocol/server? server)
+    (get-jobs-in-folder
+      [this server-context folder]
+      ;; TODO: Put the schema checks in the core functions instead of here
+      {:pre [(schema/check protocol/ServerContext server-context)
              (string? folder)]}
       [])
 
-    (get-job-status [this server job]
-      {:pre [(protocol/server? server)
+    (get-job-status
+      [this server-context job]
+      ;; TODO: Put the schema checks in the core functions instead of here
+      {:pre [(schema/check protocol/ServerContext server-context)
              (string? job)]})))

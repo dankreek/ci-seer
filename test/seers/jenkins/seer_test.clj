@@ -13,6 +13,5 @@
 
 (deftest jenkins-seer-core-test
   (testing "Parsing Jenkins view JSON"
-    (is (= 3
-           (count (:jobs (jenkins/parse-view-payload
-                           (slurp "./dev-resources/jenkins_view.json"))))))))
+    (is (= 3 (count (:jobs (jenkins/parse-view-payload
+                             (slurp "./dev-resources/jenkins_view.json"))))))))
