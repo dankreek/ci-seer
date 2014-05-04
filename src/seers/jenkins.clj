@@ -1,5 +1,5 @@
 (ns seers.jenkins
-  (:require [seers.seer-protocol :as protocol]
+  (:require [seers.protocol :as seers]
             [cheshire.core :as cheshire]
             [schema.core :as schema]
             [clj-http.client :as client]))
@@ -38,15 +38,16 @@
   (cheshire/parse-string json-string true))
 
 (schema/defn ^:always-validate
-  job-status :- protocol/JobStatus
-  [view-data]
+  job-status :- seers/JobStatus
+  [view-data :- JenkinsView
+   job :- schema/Str]
   :passing)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
 
 (def seer
-  (reify protocol/CiSeer
+  (reify seers/CiSeer
     (supports?
       [this ci-system]
       (= ci-system :jenkins))
@@ -54,12 +55,12 @@
     (get-jobs-in-folder
       [this server-context folder]
       ;; TODO: Put the schema checks in the core functions instead of here
-      {:pre [(schema/check protocol/ServerContext server-context)
+      {:pre [(schema/check seers/ServerConfig server-context)
              (string? folder)]}
       [])
 
     (get-job-status
       [this server-context job]
       ;; TODO: Put the schema checks in the core functions instead of here
-      {:pre [(schema/check protocol/ServerContext server-context)
+      {:pre [(schema/check seers/ServerConfig server-context)
              (string? job)]})))

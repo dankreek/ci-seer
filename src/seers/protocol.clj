@@ -1,19 +1,22 @@
-(ns seers.seer-protocol
+(ns seers.protocol
   (:import (java.net URL))
   (:require [schema.core :as schema]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Schemas
+;;; Schemas
 
 (def JobStatus
+  "An enumeration of the different types of job statuses which will be returned
+  by the get-job-status method."
   (schema/enum [:running :failing :passing :disabled]))
 
-(def ServerContext
+(def ServerConfig
+  "The map describing a CI Server's configuration."
   {:url URL
-   :type JobStatus})
+   :type schema/Keyword})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; CiSeer Protocol
+;;; CiSeer Protocol
 
 (defprotocol CiSeer
   "Defines operations which can be performed on a CI service."
