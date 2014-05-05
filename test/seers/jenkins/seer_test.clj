@@ -1,7 +1,7 @@
 (ns seers.jenkins.seer-test
   (:require [clojure.test :refer :all]
             [schema.core :as schema]
-            [seers.protocol :as seers]
+            [seers.core :as seers]
             [seers.jenkins :as jenkins]))
 
 

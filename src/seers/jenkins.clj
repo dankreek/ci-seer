@@ -1,5 +1,5 @@
 (ns seers.jenkins
-  (:require [seers.protocol :as seers]
+  (:require [seers.core :as seers]
             [cheshire.core :as cheshire]
             [schema.core :as schema]
             [clj-http.client :as client]))

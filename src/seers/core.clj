@@ -1,4 +1,4 @@
-(ns seers.protocol
+(ns seers.core
   (:import (java.net URL))
   (:require [schema.core :as schema]))
 
