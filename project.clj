@@ -14,10 +14,6 @@
                  [prismatic/schema "0.2.1"]
                  [clj-http "0.9.1"]]
 
-  :main ^:skip-aot dankreek.ci-seer
-
-  :target-path "target/%s"
-
   :profiles  {:uberjar {:aot :all}
 
               :dev {:dependencies  [[org.clojure/tools.namespace "0.2.4"]
