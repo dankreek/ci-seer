@@ -1,4 +1,4 @@
-(def tk-version "0.3.4")
+(def tk-version "0.4.1")
 
 (defproject dankreek/ci-seer "0.1.0-SNAPSHOT"
   :description "A Clojure-based CI radiator"
@@ -19,6 +19,4 @@
               :dev {:dependencies  [[org.clojure/tools.namespace "0.2.4"]
                                     [puppetlabs/trapperkeeper ~tk-version
                                      :classifier "test"
-                                     :scope "test"]
-                                    [spyscope "0.1.4"]]
-                    :injections    [(require 'spyscope.core)]}})
+                                     :scope "test"]]}})
