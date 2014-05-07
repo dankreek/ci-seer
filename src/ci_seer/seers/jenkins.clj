@@ -1,5 +1,5 @@
 (ns ci-seer.seers.jenkins
-  (:require [ci-seer.seers.core :as seers]
+  (:require [ci-seer.seers.core :as core]
             [cheshire.core :as cheshire]
             [schema.core :as schema]
             [clj-http.client :as client]))
@@ -31,6 +31,22 @@
   (:body (client/get (str url "/view/" view "/api/json?depth=1"))))
 
 (schema/defn ^:always-validate
+  jenkins-job->job-status :- core/JobStatus
+  [job :- JenkinsJob]
+  (let [{:keys [name color]} job]
+    {:name  name
+     :status (case color
+               "red" :failing
+               "blue" :passing
+               "disabled" :disabled
+               "aborted" :aborted)}))
+
+(schema/defn ^:always-validate
+  jenkins-view->seer-jobs :- [core/JobStatus]
+  [parsed-view :- JenkinsView]
+  (mapv jenkins-job->job-status (:jobs parsed-view)))
+
+(schema/defn ^:always-validate
   parse-view-payload :- JenkinsView
   "Parse the data returned from fetch-view-payload into
   a data structure."
@@ -38,7 +54,7 @@
   (cheshire/parse-string json-string true))
 
 (schema/defn ^:always-validate
-  job-status :- seers/JobStatus
+  job-status :- core/JobStatus
   [view-data :- JenkinsView
    job :- schema/Str]
   :passing)
@@ -47,20 +63,21 @@
 ;;; Public
 
 (def seer
-  (reify seers/CiSeer
+  (reify core/CiSeer
     (supports?
       [this ci-system]
       (= ci-system :jenkins))
 
     (get-jobs-in-folder
       [this server-context folder]
-      ;; TODO: Put the schema checks in the core functions instead of here
-      {:pre [(schema/check seers/ServerConfig server-context)
+      {:pre [(schema/check core/ServerConfig server-context)
              (string? folder)]}
-      [])
+      (let [{url :url} server-context]
+        (-> (fetch-view-payload url folder)
+            (parse-view-payload)
+            (jenkins-view->seer-jobs))))
 
     (get-job-status
       [this server-context job]
-      ;; TODO: Put the schema checks in the core functions instead of here
-      {:pre [(schema/check seers/ServerConfig server-context)
+      {:pre [(schema/check core/ServerConfig server-context)
              (string? job)]})))

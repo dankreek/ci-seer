@@ -8,7 +8,9 @@
 (def JobStatus
   "An enumeration of the different types of job statuses which will be returned
   by the get-job-status method."
-  (schema/enum [:running :failing :passing :disabled]))
+  {:name schema/Str
+   :status (schema/enum :running :failing :passing :disabled :aborted)})
+
 
 (def ServerConfig
   "The map describing a CI Server's configuration."
@@ -26,7 +28,7 @@
 
   (get-jobs-in-folder [this server-context folder]
     "Get a list of all the jobs available on the server in the folder. Each job
-    object contains info on ")
+    matches the JobStatus schema.")
 
   (get-job-status [this server-context job-name]
     "Get the current status of the provided job."))
