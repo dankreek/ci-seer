@@ -1,9 +1,8 @@
-(ns seers.jenkins.seer-test
+(ns ci-seer.seers.jenkins.seer-test
   (:require [clojure.test :refer :all]
             [schema.core :as schema]
-            [seers.core :as seers]
-            [seers.jenkins :as jenkins]))
-
+            [ci-seer.seers.core :as seers]
+            [ci-seer.seers.jenkins :as jenkins]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utilities
