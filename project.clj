@@ -1,4 +1,4 @@
-(def tk-version "0.4.1")
+(def tk-version "0.4.2")
 
 (defproject dankreek/ci-seer "0.1.0-SNAPSHOT"
   :description "A Clojure-based CI radiator"
