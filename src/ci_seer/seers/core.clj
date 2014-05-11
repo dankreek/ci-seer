@@ -9,7 +9,16 @@
   "An enumeration of the different types of job statuses which will be returned
   by the get-job-status method."
   {:name schema/Str
-   :status (schema/enum :running :failing :passing :disabled :aborted)})
+   ;; The result of the last build attempt
+   :status (schema/enum :failing
+                        :unstable
+                        :passing
+                        :pending
+                        :disabled
+                        :aborted
+                        :notbuilt)
+   ;; Is this job currently running?
+   :running schema/Bool})
 
 
 (def ServerConfig

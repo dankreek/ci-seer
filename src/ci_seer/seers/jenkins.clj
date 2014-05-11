@@ -7,14 +7,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Schemas
 
-(def JenkinsJob
+(def ParsedJob
   {:name schema/Str
    :displayName schema/Str
    :color schema/Str
    schema/Keyword schema/Any})
 
-(def JenkinsView
-  {:jobs [JenkinsJob]
+(def ParsedView
+  {:jobs [ParsedJob]
    :name schema/Str
    schema/Keyword schema/Any})
 
@@ -31,31 +31,35 @@
   (:body (client/get (str url "/view/" view "/api/json?depth=1"))))
 
 (schema/defn ^:always-validate
-  jenkins-job->job-status :- core/JobStatus
-  [job :- JenkinsJob]
-  (let [{:keys [name color]} job]
-    {:name  name
-     :status (case color
-               "red" :failing
-               "blue" :passing
-               "disabled" :disabled
-               "aborted" :aborted)}))
+  parsed-job->job-status :- core/JobStatus
+  [job :- ParsedJob]
+  (let [{:keys [name color]} job
+        [color anime] (.split color "_")]
+    {:name    name
+     :running (= anime "anime")
+     :status  (case color
+                "red"      :failing
+                "yellow"   :unstable
+                "blue"     :passing
+                "grey"     :pending
+                "disabled" :disabled
+                "aborted"  :aborted
+                "nobuilt"  :notbuilt)}))
 
 (schema/defn ^:always-validate
-  jenkins-view->seer-jobs :- [core/JobStatus]
-  [parsed-view :- JenkinsView]
-  (mapv jenkins-job->job-status (:jobs parsed-view)))
+  parsed-view->jobs-list :- [core/JobStatus]
+  [parsed-view :- ParsedView]
+  (mapv parsed-job->job-status (:jobs parsed-view)))
 
 (schema/defn ^:always-validate
-  parse-view-payload :- JenkinsView
-  "Parse the data returned from fetch-view-payload into
-  a data structure."
+  parse-view-payload :- ParsedView
+  "Parse the data returned from fetch-view-payload into a data structure."
   [json-string :- schema/Str]
   (cheshire/parse-string json-string true))
 
 (schema/defn ^:always-validate
   job-status :- core/JobStatus
-  [view-data :- JenkinsView
+  [view-data :- ParsedView
    job :- schema/Str]
   :passing)
 
@@ -75,7 +79,7 @@
       (let [{url :url} server-context]
         (-> (fetch-view-payload url folder)
             (parse-view-payload)
-            (jenkins-view->seer-jobs))))
+            (parsed-view->jobs-list))))
 
     (get-job-status
       [this server-context job]

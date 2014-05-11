@@ -89,7 +89,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/clj-typesafe-config\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "red",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/clj-typesafe-config\/1\/"
@@ -285,7 +285,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/http-client\/7\/"
         }
       ],
-      "color": "blue",
+      "color": "red_anime",
       "firstBuild": {
         "number": 7,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/http-client\/7\/"
@@ -456,7 +456,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/jdbc-util%20tests\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "yellow",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/jdbc-util%20tests\/1\/"
@@ -660,7 +660,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/jvm-ca%20acceptance%20tests\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "yellow_anime",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/jvm-ca%20acceptance%20tests\/1\/"
@@ -1088,7 +1088,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/Kitchensink%20Unit%20Tests\/55\/"
         }
       ],
-      "color": "blue",
+      "color": "blue_anime",
       "firstBuild": {
         "number": 55,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/Kitchensink%20Unit%20Tests\/55\/"
@@ -1219,7 +1219,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/lein-ubersource%20tests\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "grey",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/lein-ubersource%20tests\/1\/"
@@ -1355,7 +1355,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/mq\/9\/"
         }
       ],
-      "color": "blue",
+      "color": "nobuilt",
       "firstBuild": {
         "number": 9,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/mq\/9\/"
@@ -1796,7 +1796,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/trapperkeeper\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "disabled",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/trapperkeeper\/1\/"
@@ -2007,7 +2007,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/trapperkeeper-webserver-jetty7\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "disabled_anime",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/trapperkeeper-webserver-jetty7\/1\/"
@@ -2346,7 +2346,7 @@
           "url": "https:\/\/jenkins.puppetlabs.com\/job\/trapperkeeper-webserver-jetty9\/1\/"
         }
       ],
-      "color": "blue",
+      "color": "aborted",
       "firstBuild": {
         "number": 1,
         "url": "https:\/\/jenkins.puppetlabs.com\/job\/trapperkeeper-webserver-jetty9\/1\/"
