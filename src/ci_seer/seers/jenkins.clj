@@ -79,9 +79,4 @@
       (let [{url :url} server-context]
         (-> (fetch-view-payload url folder)
             (parse-view-payload)
-            (parsed-view->jobs-list))))
-
-    (get-job-status
-      [this server-context job]
-      {:pre [(schema/check core/ServerConfig server-context)
-             (string? job)]})))
+            (parsed-view->jobs-list))))))

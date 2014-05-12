@@ -38,14 +38,11 @@
 ;;; CiSeer Protocol
 
 (defprotocol CiSeer
-  "Defines operations which can be performed on a CI service."
+  "The functions needed to query the job statuses of a CI system.."
 
   (supports? [this ci-system]
     "Does the implementor of this protocol support the given ci-system?")
 
   (get-jobs-in-folder [this server-context folder]
     "Get a list of all the jobs available on the server in the folder. Each job
-    matches the JobStatus schema.")
-
-  (get-job-status [this server-context job-name]
-    "Get the current status of the provided job."))
+    matches the JobStatus schema."))
