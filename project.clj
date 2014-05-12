@@ -17,8 +17,8 @@
   :main puppetlabs.trapperkeeper.main
 
   :profiles  {:uberjar {:aot :all}
-
-              :dev {:dependencies  [[org.clojure/tools.namespace "0.2.4"]
+              :dev {:source-paths ["dev"]
+                    :dependencies  [[org.clojure/tools.namespace "0.2.4"]
                                     [puppetlabs/trapperkeeper ~tk-version
                                      :classifier "test"
                                      :scope "test"]]}})
