@@ -1,6 +1,6 @@
 (ns user
   (:require [clojure.pprint :refer (pprint)]
-            [ci-seer.services.seer :refer [seer-service]]
+            [ci-seer.services.ci-seer.service :refer [seer-service]]
             [clojure.tools.namespace.repl :refer (refresh)]
             [puppetlabs.trapperkeeper.core :as tk]
             [puppetlabs.trapperkeeper.app :as tkapp]))
@@ -15,7 +15,7 @@
                   [seer-service]
                   {:seer {:servers [{:type "jenkins"
                                      :url "https://jenkins.puppetlabs.com"
-                                     :folder ["clojure"]}]}})]
+                                     :folders ["clojure"]}]}})]
         (tkapp/init app))))
   (alter-var-root #'system tkapp/init)
   (tkapp/check-for-errors! system))

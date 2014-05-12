@@ -1,4 +1,4 @@
-(ns ci-seer.services.seer
+(ns ci-seer.services.ci-seer.service
   (:require [puppetlabs.trapperkeeper.core :as tk]
             [clojure.tools.logging :as log]))
 
