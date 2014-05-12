@@ -34,9 +34,9 @@
   parsed-job->job-status :- core/JobStatus
   [job :- ParsedJob]
   (let [{:keys [name color]} job
-        [color anime] (.split color "_")]
+        [color running] (.split color "_")]
     {:name    name
-     :running (= anime "anime")
+     :running (= running "anime")
      :status  (case color
                 "red"      :failing
                 "yellow"   :unstable

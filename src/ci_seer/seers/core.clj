@@ -20,11 +20,19 @@
    ;; Is this job currently running?
    :running schema/Bool})
 
-
 (def ServerConfig
   "The map describing a CI Server's configuration."
   {:url URL
    :type schema/Keyword})
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utility Functions
+
+(schema/defn find-job-by-name :- JobStatus
+  [jobs-list :- [JobStatus]
+   job-name :- schema/Str]
+  (first (filter #(= job-name (:name %))
+                 jobs-list)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; CiSeer Protocol

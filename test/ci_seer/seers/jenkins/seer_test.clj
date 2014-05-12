@@ -26,4 +26,13 @@
   (with-redefs [jenkins/fetch-view-payload mock-fetch-view-payload]
     (let [jobs (seers/get-jobs-in-folder jenkins/seer mock-context nil)]
       (testing "Parsing JSON payload into a jobs list."
-        (is (= 11 (count jobs)))))))
+        (is (= 11 (count jobs)))
+        (letfn [(job [name] (seers/find-job-by-name jobs name))]
+          (is (not (:running (job "trapperkeeper"))))
+          (is (= :unstable (:status (job "jdbc-util tests"))))
+          (is (= :notbuilt (:status (job "mq"))))
+          (is (= :disabled (:status (job "trapperkeeper-webserver-jetty7"))))
+          (is (= :aborted (:status (job "trapperkeeper-webserver-jetty9"))))
+          (is (= :passing (:status (job "jvm-ca unit tests"))))
+          (is (= :failing (:status (job "clj-typesafe-config"))))
+          (is (:running (job "http-client"))))))))
