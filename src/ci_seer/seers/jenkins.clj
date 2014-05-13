@@ -21,14 +21,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Private
 
-(def jenkins-servers (atom {}))
-
 (defn fetch-view-payload
   "Fetch a JSON representing all the contents of a Jenkins
   view, including job names and statuses."
   [url view]
   {:post [(string? %)]}
-  (:body (client/get (str url "/view/" view "/api/json?depth=1"))))
+  (:body (client/get (str url "/view/" view
+                          "/api/json?tree="
+                          "jobs[name,displayName,color,building,inQueue,"
+                               "lastBuild[estimatedDuration]]"))))
 
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
@@ -78,5 +79,5 @@
              (string? folder)]}
       (let [{url :url} server-context]
         (-> (fetch-view-payload url folder)
-            (parse-view-payload)
-            (parsed-view->jobs-list))))))
+            parse-view-payload
+            parsed-view->jobs-list)))))
