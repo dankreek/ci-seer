@@ -12,9 +12,12 @@
                  [puppetlabs/trapperkeeper ~tk-version]
                  [cheshire "5.3.1"]
                  [prismatic/schema "0.2.1"]
-                 [clj-http "0.9.1"]]
+                 [clj-http "0.9.1"]
+                 [clj-time "0.7.0"]]
 
   :main puppetlabs.trapperkeeper.main
+
+  :repl-options {:init-ns user}
 
   :profiles  {:uberjar {:aot :all}
               :dev {:source-paths ["dev"]
