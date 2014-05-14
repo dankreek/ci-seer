@@ -2,21 +2,41 @@
   (:require [ci-seer.seers.core :as core]
             [cheshire.core :as cheshire]
             [schema.core :as schema]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [clojure.string :as string]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Schemas
 
 (def ParsedJob
+  "The schema defining how Jenkins describes a job."
   {:name schema/Str
    :displayName schema/Str
    :color schema/Str
-   schema/Keyword schema/Any})
+   :inQueue schema/Bool
+   :lastBuild {:building schema/Bool
+               :estimatedDuration schema/Num
+               :timestamp schema/Int
+               :culprits [{:id schema/Str}]}})
 
 (def ParsedView
   {:jobs [ParsedJob]
-   :name schema/Str
-   schema/Keyword schema/Any})
+   :name schema/Str})
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Defines
+
+(def view-fields
+  ["name"])
+
+(def job-fields
+  ["name", "displayName", "color", "inQueue"])
+
+(def build-fields
+  ["building", "timestamp", "duration", "estimatedDuration"])
+
+(def culprit-fields
+  ["id"])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Private
@@ -26,10 +46,11 @@
   view, including job names and statuses."
   [url view]
   {:post [(string? %)]}
-  (:body (client/get (str url "/view/" view
-                          "/api/json?tree="
-                          "jobs[name,displayName,color,building,inQueue,"
-                               "lastBuild[estimatedDuration]]"))))
+  (:body (client/get (str url "/view/" view "/api/json?tree="
+                          (string/join "," view-fields) ","
+                          "jobs[" (string/join "," job-fields) ","
+                          "lastBuild[" (string/join "," build-fields) ","
+                          "culprits[" (string/join "," culprit-fields) "]]"))))
 
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
