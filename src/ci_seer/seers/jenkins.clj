@@ -101,4 +101,8 @@
       (let [{url :url} server-context]
         (-> (fetch-view-payload url folder)
             parse-view-payload
-            parsed-view->jobs-list)))))
+            parsed-view->jobs-list)))
+
+    (get-job
+      [this server-context name]
+      nil)))
