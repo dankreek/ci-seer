@@ -28,6 +28,7 @@
       (testing "Parsing JSON payload into a jobs list."
         (is (= 11 (count jobs)))
         (letfn [(job [name] (seers/find-job-by-name jobs name))]
+          (is (= :passing (:status (job "job1"))))
           (is (:running (job "job1")))
           (is (not (:running (job "job2"))))
           (is (= :failing (:status (job "job3"))))
