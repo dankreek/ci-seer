@@ -7,41 +7,34 @@
       "inQueue" : false,
       "lastBuild" : {
         "building" : true,
+        "duration" : 13638,
         "estimatedDuration" : 13638,
         "timestamp" : 1395810302000,
         "culprits" : [
-          
+
         ]
       }
     },
     {
       "displayName" : "job2",
       "name" : "job2",
-      "color" : "blue",
+      "color" : "disabled",
       "inQueue" : false,
-      "lastBuild" : {
-        "building" : false,
-        "estimatedDuration" : 25788,
-        "timestamp" : 1398711149000,
-        "culprits" : [
-          {
-            "id" : "jenkins"
-          }
-        ]
-      }
+      "lastBuild" : null
     },
     {
       "displayName" : "job3",
       "name" : "job3",
-      "color" : "red",
+      "color" : "blue",
       "inQueue" : false,
       "lastBuild" : {
         "building" : false,
-        "estimatedDuration" : 13706,
-        "timestamp" : 1399402589000,
+        "duration" : 250260,
+        "estimatedDuration" : 267988,
+        "timestamp" : 1400178321585,
         "culprits" : [
           {
-            "id" : "willis"
+            "id" : "jeremy.barlow"
           }
         ]
       }
@@ -49,14 +42,26 @@
     {
       "displayName" : "job4",
       "name" : "job4",
-      "color" : "yellow",
+      "color" : "aborted",
       "inQueue" : false,
       "lastBuild" : {
         "building" : false,
-        "estimatedDuration" : 313970,
-        "timestamp" : 1398602876000,
+        "duration" : 1549970,
+        "estimatedDuration" : 3616839,
+        "timestamp" : 1400178951212,
         "culprits" : [
-          
+          {
+            "id" : "chris"
+          },
+          {
+            "id" : "jeremy.barlow"
+          },
+          {
+            "id" : "kevin.corcoran"
+          },
+          {
+            "id" : "wayne"
+          }
         ]
       }
     },
@@ -65,27 +70,21 @@
       "name" : "job5",
       "color" : "grey",
       "inQueue" : false,
-      "lastBuild" : {
-        "building" : false,
-        "estimatedDuration" : 189765,
-        "timestamp" : 1398602697000,
-        "culprits" : [
-          
-        ]
-      }
+      "lastBuild" : null
     },
     {
       "displayName" : "job6",
       "name" : "job6",
-      "color" : "disabled",
+      "color" : "red",
       "inQueue" : false,
       "lastBuild" : {
         "building" : false,
-        "estimatedDuration" : 13142,
-        "timestamp" : 1398207092000,
+        "duration" : 8568,
+        "estimatedDuration" : 7798,
+        "timestamp" : 1400177905569,
         "culprits" : [
           {
-            "id" : "butt-head"
+            "id" : "jeremy.barlow"
           }
         ]
       }
@@ -93,29 +92,33 @@
     {
       "displayName" : "job7",
       "name" : "job7",
-      "color" : "aborted",
+      "color" : "yellow",
       "inQueue" : false,
       "lastBuild" : {
         "building" : false,
-        "estimatedDuration" : 25495,
-        "timestamp" : 1398457981000,
+        "duration" : 18460,
+        "estimatedDuration" : 18111,
+        "timestamp" : 1400177919276,
         "culprits" : [
-          
+          {
+            "id" : "patrick"
+          }
         ]
       }
     },
     {
       "displayName" : "job8",
       "name" : "job8",
-      "color" : "nobuilt",
+      "color" : "blue",
       "inQueue" : false,
       "lastBuild" : {
         "building" : false,
-        "estimatedDuration" : 31223,
-        "timestamp" : 1397606852000,
+        "duration" : 163012,
+        "estimatedDuration" : 138294,
+        "timestamp" : 1400177683732,
         "culprits" : [
           {
-            "id" : "beavis"
+            "id" : "jeremy.barlow"
           }
         ]
       }
@@ -123,15 +126,16 @@
     {
       "displayName" : "job9",
       "name" : "job9",
-      "color" : "red_anime",
+      "color" : "blue",
       "inQueue" : false,
       "lastBuild" : {
-        "building" : true,
-        "estimatedDuration" : 36838,
-        "timestamp" : 1399576975997,
+        "building" : false,
+        "duration" : 48576,
+        "estimatedDuration" : 39725,
+        "timestamp" : 1400177851960,
         "culprits" : [
           {
-            "id" : "butt-head"
+            "id" : "jeremy.barlow"
           }
         ]
       }
@@ -139,18 +143,9 @@
     {
       "displayName" : "job10",
       "name" : "job10",
-      "color" : "yellow_anime",
+      "color" : "disabled",
       "inQueue" : false,
-      "lastBuild" : {
-        "building" : true,
-        "estimatedDuration" : 35111,
-        "timestamp" : 1397605893000,
-        "culprits" : [
-          {
-            "id" : "beavis"
-          }
-        ]
-      }
+      "lastBuild" : null
     },
     {
       "displayName" : "job11",
@@ -159,15 +154,29 @@
       "inQueue" : false,
       "lastBuild" : {
         "building" : false,
-        "estimatedDuration" : 48009,
-        "timestamp" : 1400086435682,
+        "duration" : 29646,
+        "estimatedDuration" : 27840,
+        "timestamp" : 1399653857842,
         "culprits" : [
           {
-            "id" : "jenkins"
+            "id" : "jeremy.barlow"
+          },
+          {
+            "id" : "kevin.corcoran"
+          },
+          {
+            "id" : "nwolfe"
           }
         ]
       }
+    },
+    {
+      "displayName" : "job12",
+      "name" : "job12",
+      "color" : "nobuilt",
+      "inQueue" : false,
+      "lastBuild" : null
     }
   ],
-  "name" : "The View"
+  "name" : "the-view"
 }

@@ -8,19 +8,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Schemas
 
-(def ParsedJob
+(def JenkinsJob
   "The schema defining how Jenkins describes a job."
-  {:name schema/Str
-   :displayName schema/Str
+  {:displayName schema/Str
+   :name schema/Str
    :color schema/Str
    :inQueue schema/Bool
-   :lastBuild {:building schema/Bool
-               :estimatedDuration schema/Num
-               :timestamp schema/Int
-               :culprits [{:id schema/Str}]}})
+   :lastBuild   (schema/maybe {:building          schema/Bool
+                               :duration          schema/Int
+                               :estimatedDuration schema/Int
+                               :timestamp         schema/Int
+                               :culprits          [{:id schema/Str}]})})
 
-(def ParsedView
-  {:jobs [ParsedJob]
+(def JenkinsView
+  {:jobs [JenkinsJob]
    :name schema/Str})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46,19 +47,21 @@
   view, including job names and statuses."
   [url view]
   {:post [(string? %)]}
-  (:body (client/get (str url "/view/" view "/api/json?tree="
-                          (string/join "," view-fields) ","
-                          "jobs[" (string/join "," job-fields) ","
-                          "lastBuild[" (string/join "," build-fields) ","
-                          "culprits[" (string/join "," culprit-fields) "]]"))))
+  (let [full-url (str url "/view/" view "/api/json?tree="
+                      (string/join "," view-fields) ","
+                      "jobs[" (string/join "," job-fields) ","
+                      "lastBuild[" (string/join "," build-fields) ","
+                      "culprits[" (string/join "," culprit-fields) "]]]")]
+    (:body (client/get full-url))))
 
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
-  [job :- ParsedJob]
-  (let [{:keys [name color]} job
-        [color running] (.split color "_")]
+  [job :- JenkinsJob]
+  (let [{raw-color :color name :displayName} job
+        [color _] (string/split raw-color #"_")
+        running (boolean (get-in job [:lastBuild :building]))]
     {:name    name
-     :running (= running "anime")
+     :running running
      :status  (case color
                 "red"      :failing
                 "yellow"   :unstable
@@ -70,18 +73,18 @@
 
 (schema/defn ^:always-validate
   parsed-view->jobs-list :- [core/JobStatus]
-  [parsed-view :- ParsedView]
+  [parsed-view :- JenkinsView]
   (mapv parsed-job->job-status (:jobs parsed-view)))
 
 (schema/defn ^:always-validate
-  parse-view-payload :- ParsedView
+  parse-view-payload :- JenkinsView
   "Parse the data returned from fetch-view-payload into a data structure."
   [json-string :- schema/Str]
   (cheshire/parse-string json-string true))
 
 (schema/defn ^:always-validate
   job-status :- core/JobStatus
-  [view-data :- ParsedView
+  [view-data :- JenkinsView
    job :- schema/Str]
   :passing)
 

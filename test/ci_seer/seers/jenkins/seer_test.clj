@@ -8,7 +8,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utilities
 
-(def mock-view-payload "./dev-resources/jenkins_view.json")
+(def mock-view-payload
+  "./dev-resources/jenkins_view.json")
 
 (defn mock-fetch-view-payload [_ _]
   (slurp mock-view-payload))
@@ -26,14 +27,15 @@
   (with-redefs [jenkins/fetch-view-payload mock-fetch-view-payload]
     (let [jobs (seers/get-jobs-in-folder jenkins/seer mock-context nil)]
       (testing "Parsing JSON payload into a jobs list."
-        (is (= 11 (count jobs)))
+        (is (= 12 (count jobs)))
         (letfn [(job [name] (seers/find-job-by-name jobs name))]
           (is (= :passing (:status (job "job1"))))
           (is (:running (job "job1")))
           (is (not (:running (job "job2"))))
-          (is (= :failing (:status (job "job3"))))
-          (is (= :unstable (:status (job "job4"))))
+          (is (= :passing (:status (job "job3"))))
+          (is (= :aborted (:status (job "job4"))))
           (is (= :pending (:status (job "job5"))))
-          (is (= :disabled (:status (job "job6"))))
-          (is (= :aborted (:status (job "job7"))))
-          (is (= :notbuilt (:status (job "job8")))))))))
+          (is (= :failing (:status (job "job6"))))
+          (is (= :unstable (:status (job "job7"))))
+          (is (= :passing (:status (job "job8"))))
+          (is (= :passing (:status (job "job9")))))))))
