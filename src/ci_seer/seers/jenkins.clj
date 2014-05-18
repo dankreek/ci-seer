@@ -9,16 +9,16 @@
 ;;; Schemas
 
 (def JenkinsJob
-  "The schema defining how Jenkins describes a job."
+  "How Jenkins describes a job with JSON."
   {:displayName schema/Str
    :name schema/Str
    :color schema/Str
    :inQueue schema/Bool
-   :lastBuild   (schema/maybe {:building          schema/Bool
-                               :duration          schema/Int
-                               :estimatedDuration schema/Int
-                               :timestamp         schema/Int
-                               :culprits          [{:id schema/Str}]})})
+   :lastBuild (schema/maybe {:building          schema/Bool
+                             :duration          schema/Int
+                             :estimatedDuration schema/Int
+                             :timestamp         schema/Int
+                             :culprits          [{:id schema/Str}]})})
 
 (def JenkinsView
   {:jobs [JenkinsJob]
@@ -39,7 +39,7 @@
 (def culprit-fields
   ["id"])
 
-(def job-tree
+(def job-tree-fields
   (str (string/join "," job-fields) ","
        "lastBuild[" (string/join "," build-fields) ","
        "culprits[" (string/join "," culprit-fields) "]]"))
@@ -57,14 +57,15 @@
   view, including job names and statuses."
   [base-url view]
   {:post [(string? %)]}
-  (let [path (str "/view/" view "/api/json?tree=name,jobs[" job-tree "]")]
+  (let [path (str "/view/" view "/api/json?tree=name,jobs["
+                  job-tree-fields "]")]
     (fetch-json base-url path)))
 
 (defn fetch-job-payload
   "Fetch the JSON payload representing a single job on a jenkins server"
   [base-url job]
   {:post [(string? %)]}
-  (let [path (str "/job/" job "/api/json?tree=" job-tree)]
+  (let [path (str "/job/" job "/api/json?tree=" job-tree-fields)]
     (fetch-json base-url path)))
 
 (schema/defn ^:always-validate
