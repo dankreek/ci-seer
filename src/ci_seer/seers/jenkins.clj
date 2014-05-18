@@ -102,12 +102,6 @@
   [json-string :- schema/Str]
   (cheshire/parse-string json-string true))
 
-(schema/defn ^:always-validate
-  job-status :- core/JobStatus
-  [view-data :- JenkinsView
-   job :- schema/Str]
-  :passing)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
 
