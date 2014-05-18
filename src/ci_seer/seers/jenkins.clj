@@ -88,7 +88,7 @@
 (schema/defn ^:always-validate
   parsed-view->jobs-list :- [core/JobStatus]
   [parsed-view :- JenkinsView]
-  (mapv parsed-job->job-status (:jobs parsed-view)))
+  (map parsed-job->job-status (:jobs parsed-view)))
 
 (schema/defn ^:always-validate
   parse-view-payload :- JenkinsView
