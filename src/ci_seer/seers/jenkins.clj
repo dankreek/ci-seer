@@ -114,7 +114,8 @@
     (get-jobs-in-folder
       [this server-context folder]
       {:pre [(schema/check core/ServerConfig server-context)
-             (string? folder)]}
+             (string? folder)
+             (= :jenkins (:type server-context))]}
       (let [{url :url} server-context]
         (-> (fetch-view-payload url folder)
             parse-view-payload
@@ -123,7 +124,8 @@
     (get-job
       [this server-context job]
       {:pre [(schema/check core/ServerConfig server-context)
-             (string? job)]}
+             (string? job)
+             (= :jenkins (:type server-context))]}
       (let [{url :url} server-context]
         (-> (fetch-job-payload url job)
             parse-job-payload
