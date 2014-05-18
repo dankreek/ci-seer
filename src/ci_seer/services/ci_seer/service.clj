@@ -1,18 +1,27 @@
 (ns ci-seer.services.ci-seer.service
-  (:require [puppetlabs.trapperkeeper.core :as tk]
+  (:require [ci-seer.services.ci-seer.core :as core]
+            [puppetlabs.trapperkeeper.core :as tk]
             [clojure.tools.logging :as log]))
 
-(defprotocol Seer
-  "The Trapperkeeper Seer service. Currently this service does not require
-  any functions.")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Defines
+
+(def default-seers
+  "If no seers are defined in config, use these by default."
+  ["ci-seer.seers.jenkins/seer"])
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Service definition
 
 (tk/defservice seer-service
   "Seer service."
-  Seer
   [[:ConfigService get-in-config]]
   (init [this context]
         (log/info "Initializing.")
-        context)
+        (let [seers-config (get-in-config [:seer :seers])
+              seers-list (core/collect-seers (or seers-config
+                                                 default-seers))]
+          (assoc context :seers seers-list)))
 
   (start [this context]
          (log/info "Starting.")

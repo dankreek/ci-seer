@@ -14,9 +14,10 @@
     (fn [_]
       (let [app (tk/build-app
                   [seer-service]
-                  {:seer {:servers [{:type "jenkins"
-                                     :url "https://jenkins.puppetlabs.com"
-                                     :folders ["clojure"]}]}})]
+                  {:seer  {:seers [ "ci-seer.seers.jenkins/seer" ]
+                           :servers [{:type "jenkins"
+                                      :url "https://jenkins.puppetlabs.com"
+                                      :folders ["clojure"]}]}})]
         (tkapp/init app))))
   (alter-var-root #'system tkapp/init)
   (tkapp/check-for-errors! system))
