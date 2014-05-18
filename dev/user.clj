@@ -1,4 +1,5 @@
 (ns user
+  (:import (java.net URL))
   (:require [clojure.pprint :refer (pprint)]
             [ci-seer.services.ci-seer.service :refer [seer-service]]
             [clojure.tools.namespace.repl :refer (refresh)]
@@ -43,4 +44,9 @@
 (defn reset []
   (stop)
   (refresh :after 'user/go))
+
+(defn jenkins-context
+  [url]
+  {:url (URL. url)
+   :type :jenkins})
 

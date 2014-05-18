@@ -39,20 +39,33 @@
 (def culprit-fields
   ["id"])
 
+(def job-tree
+  (str (string/join "," job-fields) ","
+       "lastBuild[" (string/join "," build-fields) ","
+       "culprits[" (string/join "," culprit-fields) "]]"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Private
 
-(defn fetch-view-payload
-  "Fetch a JSON representing all the contents of a Jenkins
-  view, including job names and statuses."
-  [url view]
-  {:post [(string? %)]}
-  (let [full-url (str url "/view/" view "/api/json?tree="
-                      (string/join "," view-fields) ","
-                      "jobs[" (string/join "," job-fields) ","
-                      "lastBuild[" (string/join "," build-fields) ","
-                      "culprits[" (string/join "," culprit-fields) "]]]")]
+(defn fetch-json
+  [base-url path]
+  (let [full-url (str base-url path)]
     (:body (client/get full-url))))
+
+(defn fetch-view-payload
+  "Fetch the JSON representing all the contents of a Jenkins
+  view, including job names and statuses."
+  [base-url view]
+  {:post [(string? %)]}
+  (let [path (str "/view/" view "/api/json?tree=name,jobs[" job-tree "]")]
+    (fetch-json base-url path)))
+
+(defn fetch-job-payload
+  "Fetch the JSON payload representing a single job on a jenkins server"
+  [base-url job]
+  {:post [(string? %)]}
+  (let [path (str "/job/" job "/api/json?tree=" job-tree)]
+    (fetch-json base-url path)))
 
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
@@ -83,6 +96,12 @@
   (cheshire/parse-string json-string true))
 
 (schema/defn ^:always-validate
+  parse-job-payload :- JenkinsJob
+  "Parse the data returned from fetch-job-payload into a data structure."
+  [json-string :- schema/Str]
+  (cheshire/parse-string json-string true))
+
+(schema/defn ^:always-validate
   job-status :- core/JobStatus
   [view-data :- JenkinsView
    job :- schema/Str]
@@ -107,5 +126,10 @@
             parsed-view->jobs-list)))
 
     (get-job
-      [this server-context name]
-      nil)))
+      [this server-context job]
+      {:pre [(schema/check core/ServerConfig server-context)
+             (string? job)]}
+      (let [{url :url} server-context]
+        (-> (fetch-job-payload url job)
+            parse-job-payload
+            parsed-job->job-status)))))
