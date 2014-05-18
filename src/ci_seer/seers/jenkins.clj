@@ -3,7 +3,8 @@
             [cheshire.core :as cheshire]
             [schema.core :as schema]
             [clj-http.client :as client]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clj-time.coerce :as ctime]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Schemas
@@ -72,11 +73,11 @@
   parsed-job->job-status :- core/JobStatus
   [job :- JenkinsJob]
   (let [{raw-color :color label :displayName name :name} job
+        ;; If the job is building, the color ends with "_anime" *shrug*
         [color _] (string/split raw-color #"_")
-        running (boolean (get-in job [:lastBuild :building]))]
+        last-build (:lastBuild job)]
     {:name    name
      :label   label
-     :running running
      :status  (case color
                 "red"      :failing
                 "yellow"   :unstable
@@ -84,7 +85,10 @@
                 "grey"     :pending
                 "disabled" :disabled
                 "aborted"  :aborted
-                "nobuilt"  :notbuilt)}))
+                "nobuilt"  :notbuilt)
+     :running-job (when (:building last-build)
+                    {:start-time (ctime/from-long (:timestamp last-build))
+                     :estimated-duration (int (:estimatedDuration last-build))})}))
 
 (schema/defn ^:always-validate
   parsed-view->jobs-list :- [core/JobStatus]

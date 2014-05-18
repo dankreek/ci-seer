@@ -1,5 +1,6 @@
 (ns ci-seer.seers.core
-  (:import (java.net URL))
+  (:import (java.net URL)
+           (org.joda.time DateTime))
   (:require [schema.core :as schema]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8,9 +9,11 @@
 (def JobStatus
   "An enumeration of the different types of job statuses which will be returned
   by the get-job-status method."
-  {:label schema/Str
+  {;; The printable label of the job
+   :label schema/Str
+   ;; The unqiue name of the job as it exists on the CI server.
    :name schema/Str
-   ;; The result of the last build attempt
+   ;; The result of the last build attempt, nil if no last build exists
    :status (schema/enum :failing
                         :unstable
                         :passing
@@ -18,8 +21,11 @@
                         :disabled
                         :aborted
                         :notbuilt)
-   ;; Is this job currently running?
-   :running schema/Bool})
+   ;; If a job is currently running then this map will be set
+   :running-job (schema/maybe {;; The date and time the job started
+                               :start-time DateTime
+                               ;; Amount of time the running job should take
+                               :estimated-duration schema/Int})})
 
 (def ServerConfig
   "The map describing a CI Server's configuration."
@@ -39,7 +45,7 @@
 ;;; CiSeer Protocol
 
 (defprotocol CiSeer
-  "The functions needed to query the job statuses of a CI system.."
+  "The functions needed to query the job statuses of a CI system."
 
   (supports? [this ci-system]
     "Does the implementor of this protocol support the given ci-system?")

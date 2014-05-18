@@ -3,7 +3,8 @@
   (:require [clojure.test :refer :all]
             [schema.core :as schema]
             [ci-seer.seers.core :as seers]
-            [ci-seer.seers.jenkins :as jenkins]))
+            [ci-seer.seers.jenkins :as jenkins]
+            [clj-time.core :as time]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utilities
@@ -29,23 +30,18 @@
       (testing "Parsing JSON payload into a jobs list."
         (is (= 12 (count jobs)))
         (letfn [(get-job [name] (seers/find-job-by-name jobs name))]
-
-          (testing "Parsing :running attribute"
-            (is (:running (get-job "job1")))
-            (is (not (:running (get-job "job2")))))
-
           (testing "Parsing job statuses."
-            (is (= :passing (:status (get-job "job1"))))
+            (is (= :passing  (:status (get-job "job1"))))
             (is (= :disabled (:status (get-job "job2"))))
-            (is (= :passing (:status (get-job "job3"))))
-            (is (= :aborted (:status (get-job "job4"))))
-            (is (= :pending (:status (get-job "job5"))))
-            (is (= :failing (:status (get-job "job6"))))
+            (is (= :passing  (:status (get-job "job3"))))
+            (is (= :aborted  (:status (get-job "job4"))))
+            (is (= :pending  (:status (get-job "job5"))))
+            (is (= :failing  (:status (get-job "job6"))))
             (is (= :unstable (:status (get-job "job7"))))
-            (is (= :passing (:status (get-job "job8"))))
-            (is (= :passing (:status (get-job "job9"))))
+            (is (= :passing  (:status (get-job "job8"))))
+            (is (= :passing  (:status (get-job "job9"))))
             (is (= :disabled (:status (get-job "job10"))))
-            (is (= :passing (:status (get-job "job11"))))
+            (is (= :passing  (:status (get-job "job11"))))
             (is (= :notbuilt (:status (get-job "job12")))))
 
           (testing "Parsing :label attribute."
@@ -60,5 +56,15 @@
             (is (= "job9" (:label (get-job "job9"))))
             (is (= "job10" (:label (get-job "job10"))))
             (is (= "job11" (:label (get-job "job11"))))
-            (is (= "job12" (:label (get-job "job12"))))))))))
+            (is (= "job12" (:label (get-job "job12")))))
+
+          (testing "A currently running job parses correctly."
+            (let [job1 (get-job "job1")
+                  job2 (get-job "job2")]
+              (is (not (nil? (:running-job job1))))
+              (is (= (time/date-time 2014 3 26 5 5 2)
+                     (get-in job1 [:running-job :start-time])))
+              (is (= 13638
+                     (get-in job1 [:running-job :estimated-duration])))
+              (is (nil? (:running-job job2))))))))))
 
