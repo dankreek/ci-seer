@@ -8,7 +8,8 @@
 (def JobStatus
   "An enumeration of the different types of job statuses which will be returned
   by the get-job-status method."
-  {:name schema/Str
+  {:label schema/Str
+   :name schema/Str
    ;; The result of the last build attempt
    :status (schema/enum :failing
                         :unstable

@@ -70,10 +70,11 @@
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
   [job :- JenkinsJob]
-  (let [{raw-color :color name :displayName} job
+  (let [{raw-color :color label :displayName name :name} job
         [color _] (string/split raw-color #"_")
         running (boolean (get-in job [:lastBuild :building]))]
     {:name    name
+     :label   label
      :running running
      :status  (case color
                 "red"      :failing
