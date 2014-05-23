@@ -25,7 +25,7 @@
    :running-job (schema/maybe {;; The date and time the job started
                                :start-time DateTime
                                ;; Amount of time the running job should take
-                               :estimated-duration schema/Int})})
+                               :estimated-duration (schema/maybe schema/Int)})})
 
 (def ServerConfig
   "The map describing a CI Server's configuration."

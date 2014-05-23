@@ -75,7 +75,8 @@
   (let [{raw-color :color label :displayName name :name} job
         ;; If the job is building, the color ends with "_anime" *shrug*
         [color _] (string/split raw-color #"_")
-        last-build (:lastBuild job)]
+        last-build (:lastBuild job)
+        estimated-duration (:estimatedDuration last-build)]
     {:name    name
      :label   label
      :status  (case color
@@ -85,10 +86,11 @@
                 "grey"     :pending
                 "disabled" :disabled
                 "aborted"  :aborted
-                "nobuilt"  :notbuilt)
+                "notbuilt"  :notbuilt)
      :running-job (when (:building last-build)
                     {:start-time (ctime/from-long (:timestamp last-build))
-                     :estimated-duration (int (:estimatedDuration last-build))})}))
+                     :estimated-duration (when (>= estimated-duration 0)
+                                             estimated-duration)})}))
 
 (schema/defn ^:always-validate
   parsed-view->jobs-list :- [core/JobStatus]

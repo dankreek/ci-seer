@@ -60,11 +60,14 @@
 
           (testing "A currently running job parses correctly."
             (let [job1 (get-job "job1")
-                  job2 (get-job "job2")]
+                  job2 (get-job "job2")
+                  job11 (get-job "job11")]
               (is (not (nil? (:running-job job1))))
               (is (= (time/date-time 2014 3 26 5 5 2)
                      (get-in job1 [:running-job :start-time])))
-              (is (= 13638
-                     (get-in job1 [:running-job :estimated-duration])))
-              (is (nil? (:running-job job2))))))))))
+              (is (nil? (:running-job job2)))
+
+              (testing "Estimated duration is parsed correctly."
+                (is (= 13638 (get-in job1 [:running-job :estimated-duration])))
+                (is (nil? (get-in job11 [:running-job :estimated-duration])))))))))))
 

@@ -153,9 +153,9 @@
       "color" : "blue",
       "inQueue" : false,
       "lastBuild" : {
-        "building" : false,
+        "building" : true,
         "duration" : 29646,
-        "estimatedDuration" : 27840,
+        "estimatedDuration" : -1,
         "timestamp" : 1399653857842,
         "culprits" : [
           {
@@ -173,7 +173,7 @@
     {
       "displayName" : "job12",
       "name" : "job12",
-      "color" : "nobuilt",
+      "color" : "notbuilt",
       "inQueue" : false,
       "lastBuild" : null
     }
