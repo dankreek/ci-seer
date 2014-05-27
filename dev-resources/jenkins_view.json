@@ -4,7 +4,7 @@
       "displayName" : "job1",
       "name" : "job1",
       "color" : "blue_anime",
-      "inQueue" : false,
+      "inQueue" : true,
       "lastBuild" : {
         "building" : true,
         "duration" : 13638,

@@ -69,5 +69,9 @@
 
               (testing "Estimated duration is parsed correctly."
                 (is (= 13638 (get-in job1 [:running-job :estimated-duration])))
-                (is (nil? (get-in job11 [:running-job :estimated-duration])))))))))))
+                (is (nil? (get-in job11 [:running-job :estimated-duration]))))
+
+              (testing "In-queue is parsed correctly."
+                (is (:in-build-queue job1))
+                (is (not (:in-build-queue job2)))))))))))
 

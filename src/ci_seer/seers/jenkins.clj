@@ -72,13 +72,15 @@
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
   [job :- JenkinsJob]
-  (let [{raw-color :color label :displayName name :name} job
+  (let [in-build-queue (:inQueue job)
+        {raw-color :color label :displayName name :name} job
         ;; If the job is building, the color ends with "_anime" *shrug*
         [color _] (string/split raw-color #"_")
         last-build (:lastBuild job)
         estimated-duration (:estimatedDuration last-build)]
     {:name    name
      :label   label
+     :in-build-queue in-build-queue
      :status  (case color
                 "red"      :failing
                 "yellow"   :unstable

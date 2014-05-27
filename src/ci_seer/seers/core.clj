@@ -13,6 +13,8 @@
    :label schema/Str
    ;; The unqiue name of the job as it exists on the CI server.
    :name schema/Str
+   ;; Is this job in the build queue?
+   :in-build-queue schema/Bool
    ;; The result of the last build attempt, nil if no last build exists
    :status (schema/enum :failing
                         :unstable
@@ -24,7 +26,7 @@
    ;; If a job is currently running then this map will be set
    :running-job (schema/maybe {;; The date and time the job started
                                :start-time DateTime
-                               ;; Amount of time the running job should take
+                               ;; Amount of time the running job should take (in ms)
                                :estimated-duration (schema/maybe schema/Int)})})
 
 (def ServerConfig
