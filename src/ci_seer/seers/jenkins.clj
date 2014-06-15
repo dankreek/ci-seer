@@ -117,11 +117,11 @@
 (def seer
   (reify core/CiSeer
     (supports?
-      [this ci-system]
+      [_ ci-system]
       (= ci-system :jenkins))
 
     (get-jobs-in-folder
-      [this server-context folder]
+      [_ server-context folder]
       {:pre [(schema/check core/ServerConfig server-context)
              (string? folder)
              (= :jenkins (:type server-context))]}
@@ -131,7 +131,7 @@
             parsed-view->jobs-list)))
 
     (get-job
-      [this server-context job]
+      [_ server-context job]
       {:pre [(schema/check core/ServerConfig server-context)
              (string? job)
              (= :jenkins (:type server-context))]}
