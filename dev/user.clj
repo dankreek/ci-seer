@@ -17,14 +17,10 @@
 (def system nil)
 
 (defn init []
-  (alter-var-root
-    #'system
-    (fn [_]
-      (let [app (tk/build-app [seer-service] test-config)]
-        (tkapp/init app))))
+  (alter-var-root #'system
+    (fn [_] (tk/build-app [seer-service] test-config)))
   (alter-var-root #'system tkapp/init)
   (tkapp/check-for-errors! system))
-
 
 (defn start []
   (alter-var-root #'system
