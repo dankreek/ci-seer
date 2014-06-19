@@ -49,8 +49,8 @@
 (defprotocol CiSeer
   "The functions needed to query the job statuses of a CI system."
 
-  (supports? [this ci-system]
-    "Does the implementor of this protocol support the given ci-system?")
+  (supported-system [this]
+    "A keywords representing the CI systems this Seer supports.")
 
   (get-jobs-in-folder [this server-context folder]
     "Get a list of all the jobs available on the server in the folder. Each job

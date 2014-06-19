@@ -3,12 +3,6 @@
             [puppetlabs.trapperkeeper.core :as tk]
             [clojure.tools.logging :as log]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Defines
-
-(def default-seers
-  "If no seers are defined in config, use these by default."
-  ["ci-seer.seers.jenkins/seer"])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Service definition
@@ -16,17 +10,17 @@
 (tk/defservice seer-service
   "Seer service."
   [[:ConfigService get-in-config]]
-  (init [this context]
+  (init [_ context]
         (log/info "Initializing.")
-        (let [seers-config (get-in-config [:seer :seers])
-              seers-list (core/collect-seers (or seers-config
-                                                 default-seers))]
-          (assoc context :seers seers-list)))
+        (merge context
+               (-> (get-in-config [:seer])
+                   core/config->context
+                   core/validate-context)))
 
-  (start [this context]
+  (start [_ context]
          (log/info "Starting.")
          context)
 
-  (stop [this context]
+  (stop [_ context]
         (log/info "Stopping.")
         context))

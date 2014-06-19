@@ -23,7 +23,8 @@
 
 (deftest jenkins-seer-test
   (testing "Properly indicates that Jenkins is supported by this seer."
-    (is (seers/supports? jenkins/seer :jenkins)))
+    (is (= (seers/supported-system jenkins/seer)
+           :jenkins)))
 
   (with-redefs [jenkins/fetch-view-payload mock-fetch-view-payload]
     (let [jobs (seers/get-jobs-in-folder jenkins/seer mock-context nil)]

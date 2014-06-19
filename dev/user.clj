@@ -1,6 +1,6 @@
 (ns user
   (:import (java.net URL))
-  (:require [clojure.pprint :refer (pprint)]
+  (:require [clojure.pprint :refer :all]
             [clojure.repl :refer :all]
             [ci-seer.services.ci-seer.service :refer [seer-service]]
             [clojure.tools.namespace.repl :refer (refresh)]
@@ -11,8 +11,12 @@
   "Trapperkeeper config used for CI-Seer development."
   {:seer  {:seers ["ci-seer.seers.jenkins/seer"]
            :servers [{:type "jenkins"
-                      :url "https://jenkins.puppetlabs.com"
+                      :url  "https://jenkins.puppetlabs.com"
                       :folders ["clojure"]}]}})
+
+(defn jenkins-context [url]
+  {:url (URL. url)
+   :type :jenkins})
 
 (def system nil)
 
@@ -45,7 +49,5 @@
   (stop)
   (refresh :after 'user/go))
 
-(defn jenkins-context [url]
-  {:url (URL. url)
-   :type :jenkins})
+
 

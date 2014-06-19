@@ -116,9 +116,7 @@
 
 (def seer
   (reify core/CiSeer
-    (supports?
-      [_ ci-system]
-      (= ci-system :jenkins))
+    (supported-system [_] :jenkins)
 
     (get-jobs-in-folder
       [_ server-context folder]
