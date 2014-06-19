@@ -45,7 +45,7 @@
 
 (def SeersMap
   "A mapping from the Seer's type to its implementation."
-  {schema/Keyword (schema/->Protocol seers/CiSeer)})
+  {schema/Keyword (schema/protocol seers/CiSeer)})
 
 (def ServiceContext
   "The CI-Seer service context."
@@ -62,11 +62,14 @@
   "Resolve a Seer by its fully-qualified name."
   [fq-seer-name :- schema/Str]
   {:pre [(string? fq-seer-name)]}
-  (let [[ns seer-name] (string/split fq-seer-name #"/")
-        _ (require [(symbol ns)])
-        ;; TODO : Catch an exception and throw a proper error message.
-        seer (ns-resolve (symbol ns) (symbol seer-name))]
-    {(seers/supported-system @seer) @seer}))
+  (try
+    (let [[ns seer-name] (string/split fq-seer-name #"/")
+          _ (require [(symbol ns)])
+          seer (ns-resolve (symbol ns) (symbol seer-name))]
+      {(seers/supported-system @seer) @seer})
+    (catch FileNotFoundException _
+      (throw (IllegalStateException. (str "The seer '" fq-seer-name "' could "
+                                          "not be found."))))))
 
 (schema/defn ^:always-validate
   generate-seer-map :- SeersMap
@@ -88,11 +91,16 @@
   "In the config the server type is most likely stated as a string, this should
   be converted to a keyword."
   [server-map :- CiServerConfig]
-  (let [{:keys [type url folders jobs]} server-map]
-    {:type    (keyword type)
-     :url     (URL. url)
-     :folders folders
-     :jobs    jobs}))
+  (try
+    (let [{:keys [type url folders jobs]} server-map]
+      {:type    (keyword type)
+       :url     (URL. url)
+       :folders folders
+       :jobs    jobs})
+    (catch MalformedURLException e
+      (throw (IllegalStateException. (str "Could not parse the URL for the "
+                                          "server configured as "
+                                          server-map ": " (.getMessage e)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Core functions

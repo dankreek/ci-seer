@@ -1,7 +1,7 @@
 {
   "jobs" : [
     {
-      "displayName" : "job1",
+      "displayName" : "Job 1",
       "name" : "job1",
       "color" : "blue_anime",
       "inQueue" : true,
@@ -16,14 +16,14 @@
       }
     },
     {
-      "displayName" : "job2",
+      "displayName" : "Job #2",
       "name" : "job2",
       "color" : "disabled",
       "inQueue" : false,
       "lastBuild" : null
     },
     {
-      "displayName" : "job3",
+      "displayName" : "Nice Jorb 3",
       "name" : "job3",
       "color" : "blue",
       "inQueue" : false,
