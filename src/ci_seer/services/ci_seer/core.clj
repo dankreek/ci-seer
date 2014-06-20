@@ -62,6 +62,11 @@
   "Resolve a Seer by its fully-qualified name."
   [fq-seer-name :- schema/Str]
   {:pre [(string? fq-seer-name)]}
+  (let [[ns seer-name] (string/split fq-seer-name #"/")
+        _ (require [(symbol ns)])
+        ;; TODO: Catch an exception and throw a proper error message.
+        seer (ns-resolve (symbol ns) (symbol seer-name))]
+    {(seers/supported-system @seer) @seer}))
   (try
     (let [[ns seer-name] (string/split fq-seer-name #"/")
           _ (require [(symbol ns)])
