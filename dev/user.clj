@@ -14,10 +14,6 @@
                       :url  "https://jenkins.puppetlabs.com"
                       :folders ["clojure"]}]}})
 
-(defn jenkins-context [url]
-  {:url (URL. url)
-   :type :jenkins})
-
 (def system nil)
 
 (defn init []

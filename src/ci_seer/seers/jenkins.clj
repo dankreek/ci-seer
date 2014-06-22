@@ -1,4 +1,5 @@
 (ns ci-seer.seers.jenkins
+  (:import (java.net URL))
   (:require [ci-seer.seers.core :as core]
             [cheshire.core :as cheshire]
             [schema.core :as schema]
@@ -56,18 +57,18 @@
 (defn fetch-view-payload
   "Fetch the JSON representing all the contents of a Jenkins
   view, including job names and statuses."
-  [base-url view]
+  [url view]
   {:post [(string? %)]}
   (let [path (str "/view/" view "/api/json?tree=name,jobs["
                   job-tree-fields "]")]
-    (fetch-json base-url path)))
+    (fetch-json url path)))
 
 (defn fetch-job-payload
   "Fetch the JSON payload representing a single job on a jenkins server"
-  [base-url job]
+  [url job]
   {:post [(string? %)]}
   (let [path (str "/job/" job "/api/json?tree=" job-tree-fields)]
-    (fetch-json base-url path)))
+    (fetch-json url path)))
 
 (schema/defn ^:always-validate
   parsed-job->job-status :- core/JobStatus
@@ -119,21 +120,17 @@
     (supported-system [_] :jenkins)
 
     (get-jobs-in-folder
-      [_ server-context folder]
-      {:pre [(schema/check core/ServerConfig server-context)
-             (string? folder)
-             (= :jenkins (:type server-context))]}
-      (let [{url :url} server-context]
-        (-> (fetch-view-payload url folder)
-            parse-view-payload
-            parsed-view->jobs-list)))
+      [_ url folder]
+      {:pre [(instance? URL url)
+             (string? folder)]}
+      (-> (fetch-view-payload url folder)
+          parse-view-payload
+          parsed-view->jobs-list))
 
     (get-job
-      [_ server-context job]
-      {:pre [(schema/check core/ServerConfig server-context)
-             (string? job)
-             (= :jenkins (:type server-context))]}
-      (let [{url :url} server-context]
-        (-> (fetch-job-payload url job)
-            parse-job-payload
-            parsed-job->job-status)))))
+      [_ url job]
+      {:pre [(instance? URL url)
+             (string? job)]}
+      (-> (fetch-job-payload url job)
+          parse-job-payload
+          parsed-job->job-status))))
