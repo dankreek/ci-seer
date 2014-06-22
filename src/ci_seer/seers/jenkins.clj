@@ -82,17 +82,17 @@
      :label   label
      :in-build-queue in-build-queue
      :status  (case color
-                "red"      :failing
-                "yellow"   :unstable
-                "blue"     :passing
-                "grey"     :pending
-                "disabled" :disabled
-                "aborted"  :aborted
+                "red"       :failing
+                "yellow"    :unstable
+                "blue"      :passing
+                "grey"      :pending
+                "disabled"  :disabled
+                "aborted"   :aborted
                 "notbuilt"  :notbuilt)
      :running-job (when (:building last-build)
                     {:start-time (ctime/from-long (:timestamp last-build))
                      :estimated-duration (when (>= estimated-duration 0)
-                                             estimated-duration)})}))
+                                           estimated-duration)})}))
 
 (schema/defn ^:always-validate
   parsed-view->jobs-list :- [core/JobStatus]
