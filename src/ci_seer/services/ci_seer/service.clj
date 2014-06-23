@@ -11,14 +11,15 @@
   "Seer service."
   [[:ConfigService get-in-config]]
   (init [_ context]
-        (log/info "Initializing.")
+        (log/info "Initializing Seer service.")
         (merge context
                (-> (get-in-config [:seer])
                    core/config->context
                    core/validate-context)))
 
   (start [_ context]
-         (log/info "Starting.")
+         (log/info "Starting Seer service.")
+         (core/launch-seers! context)
          context)
 
   (stop [_ context]

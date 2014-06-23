@@ -12,7 +12,8 @@
   {:seer  {:seers ["ci-seer.seers.jenkins/seer"]
            :servers [{:type "jenkins"
                       :url  "https://jenkins.puppetlabs.com"
-                      :folders ["clojure"]}]}})
+                      :folders ["clojure"]
+                      :jobs ["mq"]}]}})
 
 (def system nil)
 

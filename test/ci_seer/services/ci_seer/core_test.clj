@@ -37,18 +37,21 @@
    :servers [{:type    context-seer-type
               :url     (URL. test-url)
               :jobs    test-jobs
-              :folders test-folders}]})
+              :folders test-folders
+              :jobs-status (atom {})}]})
 
-(def invalid-protocol-config
+(def invalid-protocol-context
   {:seers   context-seers
    :servers [{:type    context-seer-type
               :url     (URL. "ftp://test.bunk")
-              :jobs    test-jobs}]})
+              :jobs    test-jobs
+              :jobs-status (atom {})}]})
 
-(def no-jobs-test-config
+(def no-jobs-test-context
   {:seers   context-seers
    :servers [{:type    context-seer-type
-              :url     (URL. test-url)}]})
+              :url     (URL. test-url)
+              :jobs-status (atom {})}]})
 
 (deftest testing-config->context
   (testing "A proper config is tranasformed"
@@ -82,10 +85,10 @@
     (is (thrown-with-msg?
           IllegalStateException
           #"The ftp protocol is not supported"
-          (validate-context invalid-protocol-config))))
+          (validate-context invalid-protocol-context))))
 
   (testing "No jobs or folders results in an error."
     (is (thrown-with-msg?
           IllegalStateException
           #"A list of jobs or folders must be provided"
-          (validate-context no-jobs-test-config)))))
+          (validate-context no-jobs-test-context)))))
