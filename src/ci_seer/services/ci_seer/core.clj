@@ -116,6 +116,7 @@
                                           server-map ": " (.getMessage e)))))))
 
 (defn get-seer-for-server
+  "Given a CiSeer service context, find the seer which supports "
   [context server]
   (let [type (:type server)
         seers (:seers context)]
@@ -177,9 +178,9 @@
 (schema/defn ^:always-validate
   launch-server-go-blocks
   "Creates an async channel which is a merge of the individual channels which
-  return job status updates from the configured jobs and folders on a CI server.
+  recieve job status updates from the jobs and folders on a CI server.
   A go block is launched which continually recieves these updates and in-turn
-  updates the jobs-status atom"
+  updates the jobs-status atom."
   [context :- ServiceContext
    server  :- CiServerContext]
   (log/info (str "launching query threads for server at " (:url server)))
