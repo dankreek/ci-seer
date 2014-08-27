@@ -18,11 +18,13 @@
 
   :main puppetlabs.trapperkeeper.main
 
-  :repl-options {:init-ns user}
+  :repl-options {:init-ns          user
+                 :nrepl-middleware [io.aviso.nrepl/pretty-middleware]}
 
   :profiles  {:uberjar {:aot :all}
               :dev {:source-paths ["dev"]
                     :dependencies [[org.clojure/tools.namespace "0.2.4"]
+                                   [io.aviso/pretty "0.1.12"]
                                    [puppetlabs/trapperkeeper ~tk-version
                                      :classifier "test"
                                      :scope "test"]]}})
