@@ -14,17 +14,16 @@
                  [cheshire "5.3.1"]
                  [prismatic/schema "0.3.0"]
                  [clj-http "1.0.0"]
-                 [clj-time "0.8.0"]]
+                 [clj-time "0.8.0"]
+                 [tentacles "0.2.5"]]
 
   :main puppetlabs.trapperkeeper.main
 
-  :repl-options {:init-ns          user
-                 :nrepl-middleware [io.aviso.nrepl/pretty-middleware]}
+  :repl-options {:init-ns user}
 
   :profiles  {:uberjar {:aot :all}
               :dev {:source-paths ["dev"]
                     :dependencies [[org.clojure/tools.namespace "0.2.4"]
-                                   [io.aviso/pretty "0.1.12"]
                                    [puppetlabs/trapperkeeper ~tk-version
                                      :classifier "test"
                                      :scope "test"]]}})
