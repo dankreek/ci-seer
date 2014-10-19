@@ -25,7 +25,6 @@
   (testing "No outstanding PRs returns correct result."
     (with-redefs [pulls/pulls pulls-mock/pulls-mock-with-no-prs]
       (let [pr-data (core/get-pr-data github/pr-seer "" "" {})]
-        (println pr-data)
         (is (= 0 (:num-prs pr-data)))
         (is (nil? (:oldest-pr pr-data)))))))
 

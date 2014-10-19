@@ -2,24 +2,24 @@
   (:import (java.net URL))
   (:require [clojure.pprint :refer :all]
             [clojure.repl :refer :all]
-            [ci-seer.services.ci-seer.service :refer [seer-service]]
+            [ci-seer.services.ci-seer.service :refer [ci-seer-service]]
             [clojure.tools.namespace.repl :refer (refresh)]
             [puppetlabs.trapperkeeper.core :as tk]
             [puppetlabs.trapperkeeper.app :as tkapp]))
 
 (def test-config
   "Trapperkeeper config used for CI-Seer development."
-  {:seer  {:seers ["ci-seer.seers.jenkins/seer"]
-           :servers [{:type "jenkins"
-                      :url  "https://jenkins.puppetlabs.com"
-                      :folders ["clojure"]
-                      :jobs ["mq"]}]}})
+  {:ci-seers  {:seers   ["ci-seer.ci-seers.jenkins/seer"]
+               :servers [{:type    "jenkins"
+                          :url     "https://jenkins.puppetlabs.com"
+                          :folders ["Puppet Server"]
+                          :jobs    ["mq"]}]}})
 
 (def system nil)
 
 (defn init []
   (alter-var-root #'system
-    (fn [_] (tk/build-app [seer-service] test-config)))
+    (fn [_] (tk/build-app [ci-seer-service] test-config)))
   (alter-var-root #'system tkapp/init)
   (tkapp/check-for-errors! system))
 

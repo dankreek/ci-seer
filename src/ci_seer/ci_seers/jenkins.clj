@@ -1,6 +1,6 @@
-(ns ci-seer.seers.jenkins
+(ns ci-seer.ci-seers.jenkins
   (:import (java.net URL))
-  (:require [ci-seer.seers.core :as core]
+  (:require [ci-seer.ci-seers.core :as core]
             [cheshire.core :as cheshire]
             [schema.core :as schema]
             [clj-http.client :as client]
@@ -52,6 +52,7 @@
 (defn fetch-json
   [base-url path]
   (let [full-url (str base-url path)]
+    ;; Handle HTTP errors here
     (:body (client/get full-url))))
 
 (defn fetch-view-payload

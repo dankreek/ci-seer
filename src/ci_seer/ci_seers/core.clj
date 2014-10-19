@@ -1,4 +1,4 @@
-(ns ci-seer.seers.core
+(ns ci-seer.ci-seers.core
   (:import (java.net URL)
            (org.joda.time DateTime))
   (:require [schema.core :as schema]))

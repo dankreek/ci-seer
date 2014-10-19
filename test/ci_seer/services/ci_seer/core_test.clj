@@ -3,8 +3,8 @@
            (java.io FileNotFoundException))
   (:require [clojure.test :refer :all]
             [ci-seer.services.ci-seer.core :refer :all]
-            [ci-seer.seers.core :as seers]
-            [ci-seer.seers.jenkins :as jenkins]
+            [ci-seer.ci-seers.core :as seers]
+            [ci-seer.ci-seers.jenkins :as jenkins]
             [schema.test :as schema]))
 
 (use-fixtures :once schema/validate-schemas)
@@ -13,7 +13,7 @@
 (def config-test-type "jenkins")
 (def test-folders ["clojure"])
 (def test-jobs ["ajob" "anotherjob"])
-(def config-seer-list ["ci-seer.seers.jenkins/seer"])
+(def config-seer-list ["ci-seer.ci-seers.jenkins/seer"])
 
 (def good-test-config
   {:seers   config-seer-list
@@ -28,7 +28,7 @@
               :url     "invalid url"}]})
 
 (def invalid-seer-name
-  {:seers  ["some-bullcrap/seer"]
+  {:seers   ["some-bullcrap/seer"]
    :servers [{:type    config-test-type
               :url     "invalid url"}]})
 
@@ -36,7 +36,7 @@
 (def context-seer-type :jenkins)
 
 (def good-test-context
-  {:seers context-seers
+  {:seers   context-seers
    :servers [{:type    context-seer-type
               :url     (URL. test-url)
               :jobs    test-jobs

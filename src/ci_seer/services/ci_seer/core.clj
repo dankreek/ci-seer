@@ -2,7 +2,7 @@
   (:import (java.net URL MalformedURLException)
            (java.io FileNotFoundException)
            (clojure.lang Atom))
-  (:require [ci-seer.seers.core :as seers]
+  (:require [ci-seer.ci-seers.core :as seers]
             [clojure.core.async :as async :refer [>! <!]]
             [clojure.string :as string]
             [schema.core :as schema]
@@ -12,13 +12,14 @@
 ;;; Constants
 
 (def default-seers
-  "If no seers are defined in config, use these by default."
-  ["ci-seer.seers.jenkins/seer"])
+  "If no ci-seers are defined in config, use these by default."
+  ["ci-seer.ci-seers.jenkins/seer"])
 
 (def refresh-time
   "Amount of time, in milliseconds, to wait between retrieving updates from the
   CI server."
   ;; 1 minute
+  ;; TODO: use clj-time to measure this
   (* 1000 60))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -90,7 +91,7 @@
 
 (schema/defn collect-seers :- SeersMap
   "Generate a map of configured Seers by either using the list provided by the
-  config or a default list of seers if none was provided."
+  config or a default list of ci-seers if none was provided."
   [config :- Config]
   (let [seers-list (or (:seers config) default-seers)]
     (generate-seer-map seers-list)))

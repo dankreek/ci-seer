@@ -1,5 +1,5 @@
 (ns ci-seer.pr-seers.core
-  "Core code for all PR seers."
+  "Core code for all PR ci-seers."
   (:import (org.joda.time DateTime))
   (:require [tentacles.pulls :as prs]
             [schema.core :as schema]))

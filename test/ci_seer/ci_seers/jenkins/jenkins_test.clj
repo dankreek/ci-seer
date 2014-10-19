@@ -1,8 +1,8 @@
-(ns ci-seer.seers.jenkins.seer-test
+(ns ci-seer.ci-seers.jenkins.jenkins-test
   (:import (java.net URL))
   (:require [clojure.test :refer :all]
-            [ci-seer.seers.core :as seers]
-            [ci-seer.seers.jenkins :as jenkins]
+            [ci-seer.ci-seers.core :as seers]
+            [ci-seer.ci-seers.jenkins :as jenkins]
             [clj-time.core :as time]
             [schema.test :as schema]))
 

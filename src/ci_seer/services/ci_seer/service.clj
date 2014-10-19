@@ -7,13 +7,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Service definition
 
-(tk/defservice seer-service
+(tk/defservice ci-seer-service
   "Seer service."
   [[:ConfigService get-in-config]]
   (init [_ context]
         (log/info "Initializing Seer service.")
         (merge context
-               (-> (get-in-config [:seer])
+               (-> (get-in-config [:ci-seers])
                    core/config->context
                    core/validate-context)))
 
