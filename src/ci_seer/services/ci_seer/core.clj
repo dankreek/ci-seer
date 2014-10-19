@@ -69,8 +69,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utilities
 
-(schema/defn ^:always-validate
-  resolve-seer :- SeersMap
+(schema/defn resolve-seer :- SeersMap
   "Resolve a Seer by its fully-qualified name."
   [fq-seer-name :- schema/Str]
   {:pre [(string? fq-seer-name)]}
@@ -83,23 +82,20 @@
       (throw (IllegalStateException. (str "The seer '" fq-seer-name "' could "
                                           "not be found."))))))
 
-(schema/defn ^:always-validate
-  generate-seer-map :- SeersMap
+(schema/defn generate-seer-map :- SeersMap
   "Create a map of server types to their corresponding Seer objects by asking
   each Seer what its type is and storing it at that key."
   [seer-names :- [schema/Str]]
   (apply merge (map resolve-seer seer-names)))
 
-(schema/defn ^:always-validate
-  collect-seers :- SeersMap
+(schema/defn collect-seers :- SeersMap
   "Generate a map of configured Seers by either using the list provided by the
   config or a default list of seers if none was provided."
   [config :- Config]
   (let [seers-list (or (:seers config) default-seers)]
     (generate-seer-map seers-list)))
 
-(schema/defn ^:always-validate
-  server-type->keyword :- CiServerContext
+(schema/defn server-type->keyword :- CiServerContext
   "In the config the server type is most likely stated as a string, this should
   be converted to a keyword."
   [server-map :- CiServerConfig]
@@ -122,8 +118,7 @@
         seers (:seers context)]
     (get seers type)))
 
-(schema/defn ^:always-validate
-  index-jobs-list :- {schema/Keyword seers/JobStatus}
+(schema/defn index-jobs-list :- {schema/Keyword seers/JobStatus}
   "Create a map of job statuses which are keyed by the job name, converted from
   a string into a keyword. This is done to allow easy updating the job-status
   atom in the server's context."
@@ -133,8 +128,7 @@
     (fn [acc job] (conj acc {(keyword (:name job)) job}))
     {} jobs))
 
-(schema/defn ^:always-validate
-  launch-job-go-block
+(schema/defn launch-job-go-block
   "Open an async channel and creates a go block which retrieves the status of
   provided job name on the CI server and puts it on the channel. The block then
   sleeps for "
@@ -153,8 +147,7 @@
                      (recur (get-updates))))
     update-channel))
 
-(schema/defn ^:always-validate
-  launch-folder-go-block
+(schema/defn launch-folder-go-block
   "Opens a channel and creates a go block which gets the status of every job in
   the provided folder, puts it in the channel, then waits to do it again. The
   new channel is returned. If the channel is closed externally the go loop will
@@ -175,8 +168,7 @@
         (recur (get-updates))))
     update-channel))
 
-(schema/defn ^:always-validate
-  launch-server-go-blocks
+(schema/defn launch-server-go-blocks
   "Creates an async channel which is a merge of the individual channels which
   recieve job status updates from the jobs and folders on a CI server.
   A go block is launched which continually recieves these updates and in-turn
@@ -205,8 +197,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Core functions
 
-(schema/defn ^:always-validate
-  validate-context :- ServiceContext
+(schema/defn validate-context :- ServiceContext
   "Validate that each server in the config has a Seer. If no Seer type is found
   for a server then an exception is thrown, otherwise the provided context is
   returned."
@@ -231,16 +222,14 @@
                                               "https are supported.")))))))
   context)
 
-(schema/defn ^:always-validate
-  config->context :- ServiceContext
+(schema/defn config->context :- ServiceContext
   "Convert the input config provided by Trapperkeepr into a service context map."
   [config :- Config]
   (let [config-servers (:servers config)]
     {:seers   (collect-seers config)
      :servers (map server-type->keyword config-servers)}))
 
-(schema/defn ^:always-validate
-  launch-seers!
+(schema/defn launch-seers!
   "Launches go blocks for every job and folder on every server which continually
   query the CI server for the current status of each job and stores them in
   the service context."
@@ -250,8 +239,7 @@
     (launch-server-go-blocks context server))
   nil)
 
-(schema/defn ^:always-validate
-  get-jobs-status
+(defn get-jobs-status
   [context]
   (reduce conj (map #(vals @(:jobs-status %))
                     (:servers context))))

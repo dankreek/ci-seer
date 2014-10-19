@@ -70,8 +70,7 @@
   (let [path (str "/job/" job "/api/json?tree=" job-tree-fields)]
     (fetch-json url path)))
 
-(schema/defn ^:always-validate
-  parsed-job->job-status :- core/JobStatus
+(schema/defn parsed-job->job-status :- core/JobStatus
   [job :- JenkinsJob]
   (let [in-build-queue (:inQueue job)
         {raw-color :color label :displayName name :name} job
@@ -95,19 +94,16 @@
                      :estimated-duration (when (>= estimated-duration 0)
                                            estimated-duration)})}))
 
-(schema/defn ^:always-validate
-  parsed-view->jobs-list :- [core/JobStatus]
+(schema/defn parsed-view->jobs-list :- [core/JobStatus]
   [parsed-view :- JenkinsView]
   (map parsed-job->job-status (:jobs parsed-view)))
 
-(schema/defn ^:always-validate
-  parse-view-payload :- JenkinsView
+(schema/defn parse-view-payload :- JenkinsView
   "Parse the data returned from fetch-view-payload into a data structure."
   [json-string :- schema/Str]
   (cheshire/parse-string json-string true))
 
-(schema/defn ^:always-validate
-  parse-job-payload :- JenkinsJob
+(schema/defn parse-job-payload :- JenkinsJob
   "Parse the data returned from fetch-job-payload into a data structure."
   [json-string :- schema/Str]
   (cheshire/parse-string json-string true))

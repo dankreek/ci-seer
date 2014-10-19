@@ -1,10 +1,12 @@
 (ns ci-seer.seers.jenkins.seer-test
   (:import (java.net URL))
   (:require [clojure.test :refer :all]
-            [schema.core :as schema]
             [ci-seer.seers.core :as seers]
             [ci-seer.seers.jenkins :as jenkins]
-            [clj-time.core :as time]))
+            [clj-time.core :as time]
+            [schema.test :as schema]))
+
+(use-fixtures :once schema/validate-schemas)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Utilities

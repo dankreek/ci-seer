@@ -4,7 +4,10 @@
   (:require [clojure.test :refer :all]
             [ci-seer.services.ci-seer.core :refer :all]
             [ci-seer.seers.core :as seers]
-            [ci-seer.seers.jenkins :as jenkins]))
+            [ci-seer.seers.jenkins :as jenkins]
+            [schema.test :as schema]))
+
+(use-fixtures :once schema/validate-schemas)
 
 (def test-url "https://www.dontcopythat.floppy")
 (def config-test-type "jenkins")
