@@ -62,7 +62,7 @@
 
 (def ServiceContext
   "The CI-Seer service context."
-  {;; The service's configuration.
+  {;; Each configured server's context map.
    :servers [CiServerContext]
    ;; A map of Seer types to CiSeer instances.
    :seers SeersMap})
