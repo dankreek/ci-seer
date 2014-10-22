@@ -42,5 +42,7 @@
 (schema/defn config->context :- ServiceContext
   "Create a service context map from the service configuration."
   [config :- Config]
+  {
 
+    }
   )

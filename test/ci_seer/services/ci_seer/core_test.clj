@@ -70,7 +70,7 @@
   (testing "Invalid seer"
     (is (thrown-with-msg?
           IllegalStateException
-          #"The seer 'some-bullcrap/seer' could not be found."
+          #"The identifier 'some-bullcrap/seer' could not be found."
           (config->context invalid-seer-name))))
 
   (testing "Invalid URL throws error."

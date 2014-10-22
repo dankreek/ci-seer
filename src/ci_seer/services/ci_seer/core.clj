@@ -3,6 +3,7 @@
            (java.io FileNotFoundException)
            (clojure.lang Atom))
   (:require [ci-seer.ci-seers.core :as seers]
+            [ci-seer.util :as util]
             [clojure.core.async :as async :refer [>! <!]]
             [clojure.string :as string]
             [schema.core :as schema]
@@ -74,14 +75,8 @@
   "Resolve a Seer by its fully-qualified name."
   [fq-seer-name :- schema/Str]
   {:pre [(string? fq-seer-name)]}
-  (try
-    (let [[ns seer-name] (string/split fq-seer-name #"/")
-          _ (require [(symbol ns)])
-          seer (ns-resolve (symbol ns) (symbol seer-name))]
-      {(seers/supported-system @seer) @seer})
-    (catch FileNotFoundException _
-      (throw (IllegalStateException. (str "The seer '" fq-seer-name "' could "
-                                          "not be found."))))))
+  (let [seer (util/resolve-ident fq-seer-name)]
+    {(seers/supported-system seer) seer}))
 
 (schema/defn generate-seer-map :- SeersMap
   "Create a map of server types to their corresponding Seer objects by asking
