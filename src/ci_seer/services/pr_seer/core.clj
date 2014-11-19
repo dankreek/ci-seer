@@ -1,48 +1,45 @@
 (ns ci-seer.services.pr-seer.core
   (:import (clojure.lang Atom))
   (:require [ci-seer.pr-seers.core :as seers]
-            [schema.core :as core]
-            [schema.core :as schema]))
+            [schema.core :as schema]
+            [ci-seer.util :as util]))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Defines
+
+(def default-pr-seers
+  "The default PR Seers to load if none are specified in the config."
+  ["ci-seer.pr-seers.github/pr-seer"])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Schemas
 
-(def PrServerContext
-  {:type  schema/Keyword
-   :repos [{;; The owner of the repoitory
-            :user     schema/Str
-            ;; The name of the repository
-            :repo     schema/Str
-            ;; The number of open pull requests on this server
-            :open-prs Atom}]})
+(def PrSeerContext
+  "Each Seer"
+  {:seer    (schema/protocol seers/PrSeer)
+   :context schema/Any})
 
-(def ServiceContext
-  "The PR-Seer service context."
-  {;; Context map for each configured server
-   :servers [PrServerContext]
-   ;; A map of PR-seer types to PrSeer implementations
-   :seers   {schema/Keyword (schema/protocol seers/PrSeer)}})
+(def PrServiceContext
+  "The PR-Seer service context. A map of keywords which respresent the supported
+  PR-seers to their Seer implementation and context."
+  {schema/Keyword PrSeerContext})
 
-(def PrServerConfig
-  {:type  schema/Str
-   :repos [{:user schema/Str
-            :repo schema/Str}]})
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utils
 
-(def Config
-  "Schema describing the service configuration map."
-  {;; List of fully-qualified Seer objects to load. In the form of
-   ;; `name.space/seer`
-   (schema/optional-key :seers) [schema/Str]
-   ;; List of
-   :servers [PrServerConfig]})
+(schema/defn seer-context :- PrServiceContext
+  [config
+   seer :- (schema/protocol seers/PrSeer)]
+  (let [id (seers/supported-system seer)]
+    {id {:seer    seer
+         :context (seers/config->context seer (get config id))}}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Public
 
-(schema/defn config->context :- ServiceContext
-  "Create a service context map from the service configuration."
-  [config :- Config]
-  {
-
-    }
-  )
+(schema/defn config->context :- PrServiceContext
+  "Create a service context map from the global configuration map."
+  [config]
+  (let [seers-list (-> (or (:pr-seers config) default-pr-seers)
+                       util/resolve-idents)]
+    (apply merge (map (partial seer-context config) seers-list))))

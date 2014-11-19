@@ -15,7 +15,8 @@
                  [prismatic/schema "0.3.0"]
                  [clj-http "1.0.0"]
                  [clj-time "0.8.0"]
-                 [tentacles "0.2.5"]]
+                 [tentacles "0.2.5"]
+                 [slingshot "0.12.1"]]
 
   :main puppetlabs.trapperkeeper.main
 
